@@ -1,3 +1,4 @@
+
 <script setup>
 import { ref } from 'vue'
 
@@ -239,8 +240,6 @@ const tabs = ref([
     'Segoe UI',
     Roboto,
     sans-serif;
-
-  overflow: hidden;
 }
 
 
@@ -249,13 +248,13 @@ const tabs = ref([
 ========================================= */
 
 .navbar {
-  position: absolute;
+  position: fixed;
 
   top: 32px;
   left: 48px;
   right: 48px;
 
-  z-index: 10;
+  z-index: 100;
 
   display: flex;
   align-items: center;
@@ -947,3 +946,4 @@ const tabs = ref([
 }
 
 </style>
+
