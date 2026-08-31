@@ -1,151 +1,580 @@
-
 <script setup>
-import { ref } from 'vue'
+import {
+  ref,
+  onMounted,
+  onUnmounted
+} from 'vue'
+
+
+/* =========================================
+   NAVIGATION STATE
+========================================= */
 
 const activeNav = ref('Home')
-
 const activeTab = ref(0)
 
-const currentSlide = ref(1)
 
-const totalSlides = 3
+/* =========================================
+   DROPDOWN STATE
+========================================= */
 
-const navItems = ['Home', 'Services', 'Industries', 'About']
+const openDropdown = ref(null)
+const navLinksRef = ref(null)
+
+const toggleDropdown = (label) => {
+  openDropdown.value =
+    openDropdown.value === label
+      ? null
+      : label
+}
+
+const closeDropdowns = () => {
+  openDropdown.value = null
+}
+
+const handleOutsideClick = (event) => {
+  if (
+    navLinksRef.value &&
+    !navLinksRef.value.contains(event.target)
+  ) {
+    closeDropdowns()
+  }
+}
+
+
+/* =========================================
+   HERO SLIDESHOW
+========================================= */
+
+const currentSlide = ref(0)
+
+const slides = [
+  {
+    id: 1,
+    image:
+      'images/hero1.png',
+    alt: 'Alpha Business School'
+  },
+
+  {
+    id: 2,
+    image:
+      'images/hero2.png',
+    alt: 'CFA students'
+  },
+
+  {
+    id: 3,
+    image:
+      'images/hero3.png',
+    alt: 'Alpha Business School campus'
+  }
+]
+
+const totalSlides = slides.length
+
+let slideInterval = null
+
+
+/* NEXT SLIDE */
+
+const nextSlide = () => {
+  currentSlide.value =
+    (currentSlide.value + 1) %
+    totalSlides
+}
+
+
+/* PREVIOUS SLIDE */
+
+const previousSlide = () => {
+  currentSlide.value =
+    (
+      currentSlide.value -
+      1 +
+      totalSlides
+    ) %
+    totalSlides
+}
+
+
+/* GO TO SPECIFIC SLIDE */
+
+const goToSlide = (index) => {
+  currentSlide.value = index
+
+  restartSlider()
+}
+
+
+/* START AUTO SLIDESHOW */
+
+const startSlider = () => {
+  stopSlider()
+
+  slideInterval = setInterval(() => {
+    nextSlide()
+  }, 3000)
+}
+
+
+/* STOP SLIDESHOW */
+
+const stopSlider = () => {
+  if (slideInterval) {
+    clearInterval(slideInterval)
+
+    slideInterval = null
+  }
+}
+
+
+/* RESTART AFTER MANUAL CLICK */
+
+const restartSlider = () => {
+  stopSlider()
+  startSlider()
+}
+
+
+/* =========================================
+   HEADER SCROLL STATE
+========================================= */
+
+const isScrolled = ref(false)
+
+const handleScroll = () => {
+  isScrolled.value =
+    window.scrollY > 40
+}
+
+
+/* =========================================
+   LOGO FALLBACK
+========================================= */
+
+const darkLogoFailed = ref(false)
+
+const handleDarkLogoError = () => {
+  darkLogoFailed.value = true
+}
+
+
+/* =========================================
+   NAV ITEMS — Alpha Business School / CFA
+========================================= */
+
+const navItems = [
+  {
+    label: 'Home',
+    submenu: null
+  },
+  {
+    label: 'ACCA',
+    submenu: [
+      'ACCA Fundamentals',
+      'ACCA Professional',
+      'ACCA Fees',
+      'ACCA Lecture Panel'
+    ]
+  },
+  {
+    label: 'CFA',
+    submenu: [
+      'CFA Level I',
+      'CFA Fees',
+      'CFA Lecture Panel',
+      'CFA Application'
+    ]
+  },
+  {
+    label: 'CPA Australia',
+    submenu: [
+      'CPA Program',
+      'CPA Fees',
+      'CPA Lecture Panel'
+    ]
+  },
+  {
+    label: 'About Us',
+    submenu: [
+      'Our Story',
+      'Management Team',
+      'Contact Us'
+    ]
+  }
+]
+
+
+/* =========================================
+   REAL CONTACT NUMBER
+========================================= */
+
+const phoneNumber = '+94 77 365 4254'
+const phoneHref = 'tel:+94773654254'
+
+
+/* =========================================
+   HERO BOTTOM TABS — CFA program highlights
+========================================= */
 
 const tabs = ref([
   {
     id: 0,
-    label: 'GLOBAL QUALIFICATIONS',
-    detail: 'ACCA • CFA • CPA • CIA'
+    label: 'GLOBAL CREDENTIAL',
+    detail: 'Chartered Financial Analyst® (CFA), CFA Institute'
   },
+
   {
     id: 1,
-    label: 'CAREER PATHWAYS',
-    detail: 'Choose the qualification that fits your ambition'
+    label: 'VETERAN CFA PANEL',
+    detail:
+      "Sri Lanka's only CFA Charterholder lecture panel"
   },
+
   {
     id: 2,
-    label: 'EXPERT-LED LEARNING',
-    detail: 'Learn from industry professionals'
+    label: 'NOV / MAY INTAKES',
+    detail:
+      '250+ hours of live lectures & recorded access'
   }
 ])
+
+
+/* =========================================
+   COMPONENT MOUNTED
+========================================= */
+
+onMounted(() => {
+
+  window.addEventListener(
+    'scroll',
+    handleScroll,
+    {
+      passive: true
+    }
+  )
+
+  document.addEventListener(
+    'click',
+    handleOutsideClick
+  )
+
+  /* LOAD FONT AWESOME IF NOT ALREADY PRESENT */
+
+  if (
+    !document.getElementById(
+      'fa-icons-cdn'
+    )
+  ) {
+    const faLink =
+      document.createElement('link')
+
+    faLink.id = 'fa-icons-cdn'
+    faLink.rel = 'stylesheet'
+    faLink.href =
+      'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css'
+
+    document.head.appendChild(faLink)
+  }
+
+  handleScroll()
+
+  startSlider()
+})
+
+
+/* =========================================
+   COMPONENT DESTROY
+========================================= */
+
+onUnmounted(() => {
+
+  window.removeEventListener(
+    'scroll',
+    handleScroll
+  )
+
+  document.removeEventListener(
+    'click',
+    handleOutsideClick
+  )
+
+  stopSlider()
+})
 </script>
 
+
 <template>
+
   <div class="hero-wrapper">
 
-    <!-- NAVIGATION BAR -->
-    <header class="navbar">
 
-      <!-- LOGO -->
+    <!-- =========================================
+         NAVIGATION BAR
+    ========================================== -->
+
+    <header
+      class="navbar"
+      :class="{
+        scrolled: isScrolled
+      }"
+    >
+
+
+      <!-- =========================================
+           LOGO
+      ========================================== -->
+
       <div class="logo">
+
+
+        <!-- NORMAL HERO LOGO -->
+
         <img
+          v-if="!isScrolled"
           src="/images/logo.png"
           alt="Alpha Business School"
           class="logo-image"
         />
+
+
+        <!-- SCROLLED HEADER LOGO -->
+
+        <img
+          v-else-if="!darkLogoFailed"
+          src="/images/logo-dark.png"
+          alt="Alpha Business School"
+          class="logo-image"
+          @error="handleDarkLogoError"
+        />
+
+
+        <!-- FALLBACK IF DARK LOGO DOESN'T EXIST -->
+
+        <img
+          v-else
+          src="/images/logo.png"
+          alt="Alpha Business School"
+          class="logo-image logo-fallback-dark"
+        />
+
       </div>
 
-      <!-- NAVIGATION LINKS -->
-      <nav class="nav-links">
+
+      <!-- =========================================
+           NAVIGATION LINKS
+      ========================================== -->
+
+      <nav
+        class="nav-links"
+        ref="navLinksRef"
+      >
 
         <div
           v-for="item in navItems"
-          :key="item"
-          class="nav-item"
-          :class="{ active: activeNav === item }"
-          @click="activeNav = item"
+          :key="item.label"
+          class="nav-item-wrapper"
         >
-          <span>{{ item }}</span>
 
-          <svg
-            class="dropdown-icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
+          <div
+            class="nav-item"
+            :class="{
+              active:
+                activeNav === item.label,
+              'has-open-dropdown':
+                openDropdown === item.label
+            }"
+            @click="
+              activeNav = item.label;
+              item.submenu
+                ? toggleDropdown(item.label)
+                : closeDropdowns()
+            "
           >
-            <path d="M6 9l6 6 6-6" />
-          </svg>
+
+            <span>
+              {{ item.label }}
+            </span>
+
+
+            <i
+              v-if="item.submenu"
+              class="fa-solid fa-chevron-down dropdown-icon"
+              :class="{
+                open:
+                  openDropdown === item.label
+              }"
+            ></i>
+
+          </div>
+
+
+          <!-- SUBMENU -->
+
+          <transition name="dropdown-fade">
+
+            <div
+              v-if="
+                item.submenu &&
+                openDropdown === item.label
+              "
+              class="dropdown-menu"
+            >
+
+              <a
+                v-for="sub in item.submenu"
+                :key="sub"
+                href="#"
+                class="dropdown-menu-item"
+                @click.prevent="
+                  closeDropdowns()
+                "
+              >
+                {{ sub }}
+              </a>
+
+            </div>
+
+          </transition>
+
         </div>
+
+
+        <!-- APPLY NOW -->
 
         <a
           href="#"
           class="nav-pill"
-          :class="{ active: activeNav === 'Insight' }"
-          @click.prevent="activeNav = 'Insight'"
+          :class="{
+            active:
+              activeNav === 'Apply Now'
+          }"
+          @click.prevent="
+            activeNav = 'Apply Now';
+            closeDropdowns()
+          "
         >
-          Insight
+          Apply Now
         </a>
 
       </nav>
 
-      <!-- HEADER ACTIONS -->
+
+      <!-- =========================================
+           HEADER ACTIONS
+      ========================================== -->
+
       <div class="header-actions">
 
+
         <!-- SEARCH -->
+
         <button
           class="icon-btn"
           aria-label="Search"
         >
+
           <svg
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
             stroke-width="2"
           >
+
             <circle
               cx="11"
               cy="11"
               r="8"
             />
-            <path d="M21 21l-4.35-4.35" />
+
+            <path
+              d="M21 21l-4.35-4.35"
+            />
+
           </svg>
+
         </button>
 
-        <!-- CONTACT -->
-        <button class="btn-primary">
+
+        <!-- CONTACT (real number) -->
+
+        <a
+          :href="phoneHref"
+          class="btn-primary"
+          :title="phoneNumber"
+        >
           Contact Us
-        </button>
+        </a>
 
       </div>
+
     </header>
 
 
-    <!-- HERO MAIN SECTION -->
-    <section class="hero-section">
+    <!-- =========================================
+         HERO MAIN SECTION
+    ========================================== -->
 
-      <!-- BACKGROUND IMAGE -->
+    <section
+      class="hero-section"
+      @mouseenter="stopSlider"
+      @mouseleave="startSlider"
+    >
+
+
+      <!-- =========================================
+           HERO IMAGE SLIDESHOW
+      ========================================== -->
+
       <div class="hero-bg">
 
+
         <img
-          src="https://images.unsplash.com/photo-1787051503167-1a7653c0e94b?q=80&w=2429&auto=format&fit=crop"
-          alt="Consulting session"
+          v-for="(slide, index) in slides"
+          :key="slide.id"
+          :src="slide.image"
+          :alt="slide.alt"
+          class="hero-slide"
+          :class="{
+            active:
+              currentSlide === index
+          }"
         />
+
+
+        <!-- DARK GRADIENT -->
 
         <div class="hero-overlay"></div>
 
       </div>
 
 
-      <!-- HERO CONTENT -->
+      <!-- =========================================
+           HERO CONTENT
+      ========================================== -->
+
       <div class="hero-content">
 
         <h1 class="hero-title">
-          Build the Career
+
+          Built the Career
 
           <span class="title-line"></span>
 
           <br />
 
-          You’re Meant For.
+          You're meant for
+
         </h1>
+
 
         <button class="btn-action">
 
           <span>
-            Explore Qualifications
+            Explore the CFA Program
           </span>
+
 
           <span class="action-icon">
 
@@ -155,7 +584,15 @@ const tabs = ref([
               stroke="currentColor"
               stroke-width="2.5"
             >
-              <path d="M7 17L17 7M17 7H7M17 7V17" />
+
+              <path
+                d="
+                  M7 17L17 7
+                  M17 7H7
+                  M17 7V17
+                "
+              />
+
             </svg>
 
           </span>
@@ -165,32 +602,125 @@ const tabs = ref([
       </div>
 
 
-      <!-- VERTICAL SLIDER -->
+      <!-- =========================================
+           VERTICAL SLIDER INDICATOR
+      ========================================== -->
+
       <div class="vertical-slider-nav">
 
-        <span class="slider-num">
-          01
-        </span>
 
-        <div class="slider-track">
+        <!-- CURRENT SLIDE -->
+
+        <button
+          class="slider-number-button"
+          type="button"
+          aria-label="Previous slide"
+          @click="
+            previousSlide();
+            restartSlider()
+          "
+        >
+
+          {{
+            String(
+              currentSlide + 1
+            ).padStart(
+              2,
+              '0'
+            )
+          }}
+
+        </button>
+
+
+        <!-- SLIDER TRACK -->
+
+        <div
+          class="slider-track"
+          @click="
+            nextSlide();
+            restartSlider()
+          "
+        >
 
           <div
             class="slider-thumb"
             :style="{
-              height: `${(currentSlide / totalSlides) * 100}%`
+              height:
+                `${
+                  (
+                    (
+                      currentSlide +
+                      1
+                    ) /
+                    totalSlides
+                  ) *
+                  100
+                }%`
             }"
           ></div>
 
         </div>
 
-        <span class="slider-num">
-          03
-        </span>
+
+        <!-- TOTAL SLIDES -->
+
+        <button
+          class="slider-number-button"
+          type="button"
+          aria-label="Next slide"
+          @click="
+            nextSlide();
+            restartSlider()
+          "
+        >
+
+          {{
+            String(
+              totalSlides
+            ).padStart(
+              2,
+              '0'
+            )
+          }}
+
+        </button>
 
       </div>
 
 
-      <!-- BOTTOM TABS -->
+      <!-- =========================================
+           SLIDE DOTS
+      ========================================== -->
+
+      <div class="hero-dots">
+
+        <button
+          v-for="(slide, index) in slides"
+          :key="`dot-${slide.id}`"
+          type="button"
+          class="hero-dot"
+          :class="{
+            active:
+              currentSlide === index
+          }"
+          :aria-label="
+            `Go to slide ${
+              index + 1
+            }`
+          "
+          @click="
+            goToSlide(index)
+          "
+        ></button>
+
+      </div>
+
+
+      <!-- =========================================
+           BOTTOM TABS
+      ========================================== -->
+
       <div class="bottom-tabs-bar">
 
         <button
@@ -198,15 +728,26 @@ const tabs = ref([
           :key="tab.id"
           class="tab-item"
           :class="{
-            active: activeTab === index && index === 0
+            active:
+              activeTab === index &&
+              index === 0
           }"
-          :disabled="index !== 0"
-          @click="index === 0 && (activeTab = index)"
+          :disabled="
+            index !== 0
+          "
+          @click="
+            index === 0 &&
+            (
+              activeTab =
+                index
+            )
+          "
         >
 
           <span class="tab-label">
             {{ tab.label }}
           </span>
+
 
           <span class="tab-detail">
             {{ tab.detail }}
@@ -219,17 +760,28 @@ const tabs = ref([
     </section>
 
   </div>
+
 </template>
 
 
 <style scoped>
 
+/* =========================================
+   HERO WRAPPER
+========================================= */
+
 .hero-wrapper {
+
   position: relative;
+
   width: 100%;
+
   min-height: 100vh;
+
   background-color: #ffffff;
+
   box-sizing: border-box;
+
   padding: 16px;
 
   font-family:
@@ -240,6 +792,8 @@ const tabs = ref([
     'Segoe UI',
     Roboto,
     sans-serif;
+
+  overflow: hidden;
 }
 
 
@@ -248,17 +802,68 @@ const tabs = ref([
 ========================================= */
 
 .navbar {
-  position: fixed;
+
+  position: absolute;
 
   top: 32px;
+
   left: 48px;
   right: 48px;
 
-  z-index: 100;
+  z-index: 1000;
 
   display: flex;
+
   align-items: center;
-  justify-content: space-between;
+
+  justify-content:
+    space-between;
+
+  box-sizing:
+    border-box;
+
+  transition:
+    top 0.3s ease,
+    left 0.3s ease,
+    right 0.3s ease,
+    padding 0.3s ease,
+    background 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+
+/* =========================================
+   SCROLLED HEADER
+========================================= */
+
+.navbar.scrolled {
+
+  position: fixed;
+
+  top: 0;
+
+  left: 0;
+  right: 0;
+
+  padding:
+    10px
+    48px;
+
+  background:
+    #ffffff;
+
+  box-shadow:
+    0
+    8px
+    28px
+    rgba(
+      15,
+      23,
+      42,
+      0.12
+    );
+
+  z-index: 1500;
 }
 
 
@@ -267,108 +872,400 @@ const tabs = ref([
 ========================================= */
 
 .logo {
+
   display: flex;
+
   align-items: center;
+
   flex-shrink: 0;
 }
 
+
 .logo-image {
+
   width: 105px;
+
   height: auto;
+
   display: block;
+
   object-fit: contain;
+
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    filter 0.3s ease;
 }
+
+
+/* FALLBACK DARK LOGO */
+
+.logo-fallback-dark {
+
+  filter:
+    brightness(0);
+}
+
 
 /* =========================================
    NAVIGATION
 ========================================= */
 
 .nav-links {
+
   display: flex;
+
   align-items: center;
+
   gap: 8px;
 
-  background: rgba(255, 255, 255, 0.1);
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.1
+    );
 
-  backdrop-filter: blur(12px);
+  backdrop-filter:
+    blur(12px);
 
-  padding: 6px 8px;
+  -webkit-backdrop-filter:
+    blur(12px);
 
-  border-radius: 40px;
+  padding:
+    6px
+    8px;
 
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius:
+    40px;
+
+  border:
+    1px
+    solid
+    rgba(
+      255,
+      255,
+      255,
+      0.15
+    );
+
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease;
 }
 
 
+/* =========================================
+   SCROLLED NAVIGATION
+========================================= */
+
+.navbar.scrolled .nav-links {
+
+  background:
+    #f4f4f5;
+
+  border-color:
+    #e4e4e7;
+}
+
+
+.navbar.scrolled .nav-item,
+.navbar.scrolled .nav-pill {
+
+  color:
+    #475569;
+}
+
+
+.navbar.scrolled .nav-item:hover,
+.navbar.scrolled .nav-pill:hover {
+
+  color:
+    #0f172a;
+
+  background:
+    rgba(
+      15,
+      23,
+      42,
+      0.05
+    );
+}
+
+
+.navbar.scrolled .nav-item.active,
+.navbar.scrolled .nav-pill.active {
+
+  background:
+    #ffffff;
+
+  color:
+    #0f172a;
+}
+
+
+/* =========================================
+   NAV ITEM
+========================================= */
+
 .nav-item {
+
   display: flex;
+
   align-items: center;
+
   gap: 4px;
 
-  color: rgba(255, 255, 255, 0.8);
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.8
+    );
 
-  font-size: 14px;
-  font-weight: 500;
+  font-size:
+    14px;
 
-  padding: 8px 16px;
+  font-weight:
+    500;
 
-  border-radius: 20px;
+  padding:
+    8px
+    16px;
 
-  cursor: pointer;
+  border-radius:
+    20px;
+
+  cursor:
+    pointer;
 
   transition:
-    all 0.2s ease;
+    background 0.2s ease,
+    color 0.2s ease;
 }
 
 
 .nav-item:hover {
-  color: #ffffff;
+
+  color:
+    #ffffff;
 }
 
 
 .nav-item.active {
-  background: #ffffff;
 
-  color: #0f172a;
+  background:
+    #ffffff;
 
-  font-weight: 600;
+  color:
+    #0f172a;
+
+  font-weight:
+    600;
 }
 
+
+/* =========================================
+   NAV ITEM WRAPPER (for dropdown positioning)
+========================================= */
+
+.nav-item-wrapper {
+
+  position:
+    relative;
+}
+
+
+/* =========================================
+   DROPDOWN ICON (Font Awesome)
+========================================= */
 
 .dropdown-icon {
-  width: 14px;
-  height: 14px;
+
+  font-size:
+    11px;
+
+  line-height:
+    1;
+
+  transition:
+    transform 0.25s ease;
 }
 
 
-.nav-pill {
-  color: rgba(255, 255, 255, 0.8);
+.dropdown-icon.open {
 
-  padding: 8px 18px;
+  transform:
+    rotate(180deg);
+}
 
-  border-radius: 20px;
 
-  text-decoration: none;
+/* =========================================
+   DROPDOWN MENU
+========================================= */
 
-  font-size: 13px;
-  font-weight: 500;
+.dropdown-menu {
+
+  position:
+    absolute;
+
+  top:
+    calc(100% + 10px);
+
+  left:
+    0;
+
+  min-width:
+    200px;
+
+  background:
+    #ffffff;
+
+  border-radius:
+    14px;
+
+  box-shadow:
+    0
+    14px
+    32px
+    rgba(
+      15,
+      23,
+      42,
+      0.18
+    );
+
+  padding:
+    8px;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    2px;
+
+  z-index:
+    2000;
+}
+
+
+.dropdown-menu-item {
+
+  color:
+    #475569;
+
+  font-size:
+    13px;
+
+  font-weight:
+    500;
+
+  text-decoration:
+    none;
+
+  padding:
+    9px
+    14px;
+
+  border-radius:
+    9px;
 
   transition:
-    all 0.2s ease;
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+
+.dropdown-menu-item:hover {
+
+  background:
+    #f4f4f5;
+
+  color:
+    #0f172a;
+}
+
+
+/* DROPDOWN TRANSITION */
+
+.dropdown-fade-enter-active,
+.dropdown-fade-leave-active {
+
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+
+
+.dropdown-fade-enter-from,
+.dropdown-fade-leave-to {
+
+  opacity:
+    0;
+
+  transform:
+    translateY(-6px);
+}
+
+
+/* =========================================
+   APPLY NOW PILL
+========================================= */
+
+.nav-pill {
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.8
+    );
+
+  padding:
+    8px
+    18px;
+
+  border-radius:
+    20px;
+
+  text-decoration:
+    none;
+
+  font-size:
+    13px;
+
+  font-weight:
+    500;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
 }
 
 
 .nav-pill:hover {
-  color: #ffffff;
+
+  color:
+    #ffffff;
 }
 
 
 .nav-pill.active {
-  background: #ffffff;
 
-  color: #0f172a;
+  background:
+    #ffffff;
 
-  font-weight: 600;
+  color:
+    #0f172a;
+
+  font-weight:
+    600;
 }
 
 
@@ -377,69 +1274,130 @@ const tabs = ref([
 ========================================= */
 
 .header-actions {
+
   display: flex;
+
   align-items: center;
+
   gap: 12px;
 }
 
 
+/* =========================================
+   SEARCH BUTTON
+========================================= */
+
 .icon-btn {
+
   width: 42px;
+
   height: 42px;
 
-  border-radius: 50%;
+  border-radius:
+    50%;
 
-  background: rgba(255, 255, 255, 0.85);
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.85
+    );
 
-  border: none;
+  border:
+    none;
 
   display: flex;
-  align-items: center;
-  justify-content: center;
 
-  cursor: pointer;
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  cursor:
+    pointer;
 
   transition:
-    transform 0.2s ease;
+    transform 0.2s ease,
+    background 0.3s ease;
+}
+
+
+.navbar.scrolled .icon-btn {
+
+  background:
+    #f4f4f5;
 }
 
 
 .icon-btn:hover {
-  transform: scale(1.05);
+
+  transform:
+    scale(1.05);
 }
 
 
 .icon-btn svg {
+
   width: 18px;
+
   height: 18px;
 
-  stroke: #0f172a;
+  stroke:
+    #0f172a;
 }
 
 
+/* =========================================
+   CONTACT BUTTON
+========================================= */
+
 .btn-primary {
-  background: #a3e635;
 
-  color: #0f172a;
+  background:
+    #a3e635;
 
-  border: none;
+  color:
+    #0f172a;
 
-  padding: 12px 24px;
+  border:
+    none;
 
-  border-radius: 24px;
+  padding:
+    12px
+    24px;
 
-  font-size: 14px;
-  font-weight: 600;
+  border-radius:
+    24px;
 
-  cursor: pointer;
+  font-size:
+    14px;
+
+  font-weight:
+    600;
+
+  cursor:
+    pointer;
+
+  text-decoration:
+    none;
+
+  display:
+    inline-block;
 
   transition:
-    opacity 0.2s ease;
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
 
 .btn-primary:hover {
+
   opacity: 0.9;
+
+  transform:
+    translateY(-1px);
 }
 
 
@@ -448,22 +1406,34 @@ const tabs = ref([
 ========================================= */
 
 .hero-section {
+
   position: relative;
 
   width: 100%;
 
-  height: calc(100vh - 32px);
+  height:
+    calc(
+      100vh - 32px
+    );
 
-  border-radius: 24px;
+  border-radius:
+    24px;
 
-  overflow: hidden;
+  overflow:
+    hidden;
 
-  display: flex;
-  align-items: center;
+  display:
+    flex;
 
-  padding: 0 64px;
+  align-items:
+    center;
 
-  box-sizing: border-box;
+  padding:
+    0
+    64px;
+
+  box-sizing:
+    border-box;
 }
 
 
@@ -472,39 +1442,149 @@ const tabs = ref([
 ========================================= */
 
 .hero-bg {
-  position: absolute;
 
-  inset: 0;
+  position:
+    absolute;
 
-  width: 100%;
-  height: 100%;
+  inset:
+    0;
 
-  z-index: 1;
+  width:
+    100%;
+
+  height:
+    100%;
+
+  z-index:
+    1;
+
+  overflow:
+    hidden;
+
+  background:
+    #111827;
 }
 
 
-.hero-bg img {
-  width: 100%;
-  height: 100%;
+/* =========================================
+   HERO SLIDES
+========================================= */
 
-  object-fit: cover;
+.hero-slide {
+
+  position:
+    absolute;
+
+  top:
+    0;
+
+  left:
+    0;
+
+  width:
+    100%;
+
+  height:
+    100%;
+
+  object-fit:
+    cover;
+
+  object-position:
+    center;
+
+  opacity:
+    0;
+
+  transform:
+    scale(1.05);
+
+  z-index:
+    1;
+
+  pointer-events:
+    none;
+
+  transition:
+    opacity 0.7s ease,
+    transform 4s ease;
+
 }
 
+
+/* ACTIVE SLIDE */
+
+.hero-slide.active {
+
+  opacity:
+    1;
+
+  transform:
+    scale(1);
+
+  z-index:
+    2;
+}
+
+
+/* =========================================
+   HERO OVERLAY
+========================================= */
 
 .hero-overlay {
-  position: absolute;
 
-  inset: 0;
+  position:
+    absolute;
 
-  width: 100%;
-  height: 100%;
+  inset:
+    0;
+
+  width:
+    100%;
+
+  height:
+    100%;
+
+  z-index:
+    3;
+
+  pointer-events:
+    none;
 
   background:
     linear-gradient(
       90deg,
-      rgba(0, 0, 0, 0.55) 0%,
-      rgba(0, 0, 0, 0.15) 60%,
-      rgba(0, 0, 0, 0) 100%
+      rgba(
+        0,
+        0,
+        0,
+        0.58
+      )
+      0%,
+
+      rgba(
+        0,
+        0,
+        0,
+        0.25
+      )
+      45%,
+
+      rgba(
+        0,
+        0,
+        0,
+        0.08
+      )
+      70%,
+
+      rgba(
+        0,
+        0,
+        0,
+        0
+      )
+      100%
     );
 }
 
@@ -514,40 +1594,74 @@ const tabs = ref([
 ========================================= */
 
 .hero-content {
-  position: relative;
 
-  z-index: 2;
+  position:
+    relative;
 
-  max-width: 600px;
+  z-index:
+    5;
+
+  max-width:
+    600px;
 }
 
+
+/* =========================================
+   HERO TITLE
+========================================= */
 
 .hero-title {
-  font-size: clamp(38px, 4.5vw, 64px);
 
-  font-weight: 500;
+  font-size:
+    clamp(
+      38px,
+      4.5vw,
+      64px
+    );
 
-  color: #ffffff;
+  font-weight:
+    500;
 
-  line-height: 1.15;
+  color:
+    #ffffff;
 
-  margin: 0 0 36px 0;
+  line-height:
+    1.15;
 
-  letter-spacing: -1px;
+  margin:
+    0
+    0
+    36px
+    0;
+
+  letter-spacing:
+    -1px;
 }
 
 
+/* =========================================
+   GREEN LINE
+========================================= */
+
 .title-line {
-  display: inline-block;
 
-  width: 80px;
-  height: 2px;
+  display:
+    inline-block;
 
-  background-color: #a3e635;
+  width:
+    80px;
 
-  vertical-align: middle;
+  height:
+    2px;
 
-  margin-left: 8px;
+  background-color:
+    #a3e635;
+
+  vertical-align:
+    middle;
+
+  margin-left:
+    8px;
 }
 
 
@@ -556,27 +1670,42 @@ const tabs = ref([
 ========================================= */
 
 .btn-action {
-  display: inline-flex;
 
-  align-items: center;
+  display:
+    inline-flex;
 
-  gap: 12px;
+  align-items:
+    center;
 
-  background: #a3e635;
+  gap:
+    12px;
 
-  color: #0f172a;
+  background:
+    #a3e635;
 
-  border: none;
+  color:
+    #0f172a;
 
-  padding: 6px 6px 6px 24px;
+  border:
+    none;
 
-  border-radius: 30px;
+  padding:
+    6px
+    6px
+    6px
+    24px;
 
-  font-size: 15px;
+  border-radius:
+    30px;
 
-  font-weight: 600;
+  font-size:
+    15px;
 
-  cursor: pointer;
+  font-weight:
+    600;
+
+  cursor:
+    pointer;
 
   transition:
     transform 0.2s ease;
@@ -584,31 +1713,56 @@ const tabs = ref([
 
 
 .btn-action:hover {
-  transform: translateY(-2px);
+
+  transform:
+    translateY(-2px);
 }
 
 
+/* =========================================
+   ACTION ICON
+========================================= */
+
 .action-icon {
-  width: 36px;
-  height: 36px;
 
-  border-radius: 50%;
+  width:
+    36px;
 
-  background: rgba(0, 0, 0, 0.1);
+  height:
+    36px;
 
-  display: flex;
+  border-radius:
+    50%;
 
-  align-items: center;
+  background:
+    rgba(
+      0,
+      0,
+      0,
+      0.1
+    );
 
-  justify-content: center;
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
 }
 
 
 .action-icon svg {
-  width: 16px;
-  height: 16px;
 
-  stroke: #0f172a;
+  width:
+    16px;
+
+  height:
+    16px;
+
+  stroke:
+    #0f172a;
 }
 
 
@@ -617,57 +1771,214 @@ const tabs = ref([
 ========================================= */
 
 .vertical-slider-nav {
-  position: absolute;
 
-  right: 48px;
+  position:
+    absolute;
 
-  top: 50%;
+  right:
+    48px;
 
-  transform: translateY(-50%);
+  top:
+    50%;
 
-  z-index: 2;
+  transform:
+    translateY(-50%);
 
-  display: flex;
+  z-index:
+    6;
 
-  flex-direction: column;
+  display:
+    flex;
 
-  align-items: center;
+  flex-direction:
+    column;
 
-  gap: 12px;
+  align-items:
+    center;
 
-  color: rgba(255, 255, 255, 0.6);
+  gap:
+    12px;
 
-  font-size: 12px;
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.7
+    );
+
+  font-size:
+    12px;
 }
 
+
+/* =========================================
+   NUMBER BUTTONS
+========================================= */
+
+.slider-number-button {
+
+  padding:
+    0;
+
+  border:
+    none;
+
+  background:
+    transparent;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.7
+    );
+
+  font-family:
+    inherit;
+
+  font-size:
+    12px;
+
+  cursor:
+    pointer;
+}
+
+
+/* =========================================
+   SLIDER TRACK
+========================================= */
 
 .slider-track {
-  width: 2px;
 
-  height: 100px;
+  width:
+    2px;
 
-  background: rgba(255, 255, 255, 0.2);
+  height:
+    100px;
 
-  position: relative;
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.2
+    );
 
-  border-radius: 2px;
+  position:
+    relative;
+
+  border-radius:
+    2px;
+
+  overflow:
+    hidden;
+
+  cursor:
+    pointer;
 }
 
 
+/* =========================================
+   SLIDER PROGRESS
+========================================= */
+
 .slider-thumb {
-  width: 100%;
 
-  background: #a3e635;
+  width:
+    100%;
 
-  position: absolute;
+  background:
+    #a3e635;
 
-  top: 0;
-  left: 0;
+  position:
+    absolute;
 
-  border-radius: 2px;
+  top:
+    0;
+
+  left:
+    0;
+
+  border-radius:
+    2px;
 
   transition:
-    height 0.3s ease;
+    height 0.5s ease;
+}
+
+
+/* =========================================
+   SLIDE DOTS
+========================================= */
+
+.hero-dots {
+
+  position:
+    absolute;
+
+  right:
+    48px;
+
+  bottom:
+    130px;
+
+  z-index:
+    7;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    6px;
+}
+
+
+.hero-dot {
+
+  width:
+    6px;
+
+  height:
+    6px;
+
+  padding:
+    0;
+
+  border:
+    none;
+
+  border-radius:
+    20px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.45
+    );
+
+  cursor:
+    pointer;
+
+  transition:
+    width 0.3s ease,
+    background 0.3s ease;
+}
+
+
+.hero-dot.active {
+
+  width:
+    22px;
+
+  background:
+    #a3e635;
 }
 
 
@@ -676,49 +1987,98 @@ const tabs = ref([
 ========================================= */
 
 .bottom-tabs-bar {
-  position: absolute;
 
-  bottom: 32px;
+  position:
+    absolute;
 
-  left: 64px;
-  right: 64px;
+  bottom:
+    32px;
 
-  z-index: 2;
+  left:
+    64px;
 
-  display: flex;
+  right:
+    64px;
 
-  gap: 16px;
+  z-index:
+    6;
+
+  display:
+    flex;
+
+  gap:
+    16px;
 }
 
 
+/* =========================================
+   TAB ITEM
+========================================= */
+
 .tab-item {
-  flex: 1;
 
-  display: flex;
+  flex:
+    1;
 
-  flex-direction: column;
+  display:
+    flex;
 
-  justify-content: center;
+  flex-direction:
+    column;
 
-  gap: 5px;
+  justify-content:
+    center;
 
-  background: rgba(255, 255, 255, 0.2);
+  gap:
+    5px;
 
-  backdrop-filter: blur(16px);
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.2
+    );
 
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter:
+    blur(16px);
 
-  border-radius: 16px;
+  -webkit-backdrop-filter:
+    blur(16px);
 
-  padding: 10px 25px;
+  border:
+    1px
+    solid
+    rgba(
+      255,
+      255,
+      255,
+      0.2
+    );
 
-  min-height: 72px;
+  border-radius:
+    16px;
 
-  color: rgba(255, 255, 255, 0.7);
+  padding:
+    10px
+    25px;
 
-  text-align: left;
+  min-height:
+    72px;
 
-  cursor: default;
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.7
+    );
+
+  text-align:
+    left;
+
+  cursor:
+    default;
 
   transition:
     background 0.3s ease,
@@ -728,50 +2088,122 @@ const tabs = ref([
 }
 
 
+/* =========================================
+   TAB HOVER
+========================================= */
+
 .tab-item:hover {
-  background: rgba(255, 255, 255, 0.3);
 
-  color: #ffffff;
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.3
+    );
 
-  transform: translateY(-2px);
+  color:
+    #ffffff;
+
+  transform:
+    translateY(-2px);
 }
 
+
+/* =========================================
+   DISABLED TAB
+========================================= */
 
 .tab-item:disabled {
-  opacity: 1;
+
+  opacity:
+    1;
+
+  cursor:
+    default;
 }
 
+
+/* =========================================
+   ACTIVE TAB
+========================================= */
+
+.tab-item.active {
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.24
+    );
+
+  color:
+    #ffffff;
+
+  border-color:
+    rgba(
+      255,
+      255,
+      255,
+      0.32
+    );
+}
+
+
+/* =========================================
+   TAB LABEL
+========================================= */
 
 .tab-label {
-  display: block;
 
-  font-size: 12px;
+  display:
+    block;
 
-  font-weight: 700;
+  font-size:
+    12px;
 
-  letter-spacing: 0.8px;
+  font-weight:
+    700;
 
-  line-height: 1.2;
+  letter-spacing:
+    0.8px;
+
+  line-height:
+    1.2;
 }
 
 
+/* =========================================
+   TAB DETAIL
+========================================= */
+
 .tab-detail {
-  display: block;
 
-  font-size: 12px;
+  display:
+    block;
 
-  font-weight: 400;
+  font-size:
+    12px;
 
-  letter-spacing: 0;
+  font-weight:
+    400;
 
-  line-height: 1.4;
+  letter-spacing:
+    0;
 
-  opacity: 0.8;
+  line-height:
+    1.4;
+
+  opacity:
+    0.8;
 }
 
 
 .tab-item.active .tab-detail {
-  opacity: 0.65;
+
+  opacity:
+    0.65;
 }
 
 
@@ -779,27 +2211,72 @@ const tabs = ref([
    TABLET
 ========================================= */
 
-@media (max-width: 1100px) {
+@media (
+  max-width: 1100px
+) {
 
   .navbar {
-    left: 32px;
-    right: 32px;
+
+    left:
+      32px;
+
+    right:
+      32px;
+  }
+
+
+  .navbar.scrolled {
+
+    left:
+      0;
+
+    right:
+      0;
+
+    padding-left:
+      32px;
+
+    padding-right:
+      32px;
   }
 
 
   .logo-image {
-    width: 135px;
+
+    width:
+      135px;
   }
 
 
   .hero-section {
-    padding: 0 40px;
+
+    padding:
+      0
+      40px;
   }
 
 
   .bottom-tabs-bar {
-    left: 40px;
-    right: 40px;
+
+    left:
+      40px;
+
+    right:
+      40px;
+  }
+
+
+  .vertical-slider-nav {
+
+    right:
+      32px;
+  }
+
+
+  .hero-dots {
+
+    right:
+      32px;
   }
 
 }
@@ -809,43 +2286,92 @@ const tabs = ref([
    SMALL TABLET
 ========================================= */
 
-@media (max-width: 900px) {
+@media (
+  max-width: 900px
+) {
 
   .navbar {
-    left: 24px;
-    right: 24px;
+
+    left:
+      24px;
+
+    right:
+      24px;
+  }
+
+
+  .navbar.scrolled {
+
+    left:
+      0;
+
+    right:
+      0;
+
+    padding-left:
+      24px;
+
+    padding-right:
+      24px;
   }
 
 
   .nav-links {
-    display: none;
+
+    display:
+      none;
   }
 
 
   .hero-section {
-    padding: 0 24px;
+
+    padding:
+      0
+      24px;
   }
 
 
   .hero-title {
-    font-size: clamp(36px, 7vw, 52px);
+
+    font-size:
+      clamp(
+        36px,
+        7vw,
+        52px
+      );
   }
 
 
   .bottom-tabs-bar {
-    left: 24px;
-    right: 24px;
 
-    flex-direction: column;
+    left:
+      24px;
 
-    gap: 8px;
+    right:
+      24px;
+
+    flex-direction:
+      column;
+
+    gap:
+      8px;
   }
 
 
   .tab-item {
-    min-height: auto;
 
-    padding: 10px;
+    min-height:
+      auto;
+
+    padding:
+      10px;
+  }
+
+
+  .hero-dots {
+
+    bottom:
+      245px;
   }
 
 }
@@ -855,95 +2381,254 @@ const tabs = ref([
    MOBILE
 ========================================= */
 
-@media (max-width: 600px) {
+@media (
+  max-width: 600px
+) {
 
   .hero-wrapper {
-    padding: 8px;
+
+    padding:
+      8px;
   }
 
 
   .hero-section {
-    height: calc(100vh - 16px);
 
-    border-radius: 18px;
+    height:
+      calc(
+        100vh - 16px
+      );
 
-    padding: 0 20px;
+    min-height:
+      620px;
+
+    border-radius:
+      18px;
+
+    padding:
+      0
+      20px;
   }
 
 
-  .navbar {
-    top: 22px;
+  /* NORMAL HERO NAV */
 
-    left: 20px;
-    right: 20px;
+  .navbar {
+
+    top:
+      22px;
+
+    left:
+      20px;
+
+    right:
+      20px;
+  }
+
+
+  /* SCROLLED HEADER */
+
+  .navbar.scrolled {
+
+    top:
+      0;
+
+    left:
+      0;
+
+    right:
+      0;
+
+    padding:
+      9px
+      20px;
   }
 
 
   .logo-image {
-    width: 115px;
+
+    width:
+      115px;
   }
 
 
   .btn-primary {
-    padding: 10px 16px;
 
-    font-size: 12px;
+    padding:
+      10px
+      16px;
+
+    font-size:
+      12px;
   }
 
 
   .icon-btn {
-    width: 38px;
-    height: 38px;
+
+    width:
+      38px;
+
+    height:
+      38px;
   }
 
 
   .hero-content {
-    max-width: 90%;
+
+    max-width:
+      90%;
   }
 
 
   .hero-title {
-    font-size: clamp(34px, 10vw, 46px);
 
-    margin-bottom: 28px;
+    font-size:
+      clamp(
+        34px,
+        10vw,
+        46px
+      );
+
+    margin-bottom:
+      28px;
   }
 
 
   .title-line {
-    width: 50px;
+
+    width:
+      50px;
   }
 
 
   .vertical-slider-nav {
-    right: 20px;
+
+    right:
+      20px;
+  }
+
+
+  .hero-dots {
+
+    right:
+      20px;
+
+    bottom:
+      240px;
   }
 
 
   .bottom-tabs-bar {
-    bottom: 20px;
 
-    left: 20px;
-    right: 20px;
+    bottom:
+      20px;
+
+    left:
+      20px;
+
+    right:
+      20px;
   }
 
 
   .tab-item {
-    padding: 10px;
 
-    border-radius: 12px;
+    padding:
+      10px;
+
+    border-radius:
+      12px;
   }
 
 
   .tab-label {
-    font-size: 10px;
+
+    font-size:
+      10px;
   }
 
 
   .tab-detail {
-    font-size: 10px;
+
+    font-size:
+      10px;
+  }
+
+}
+
+
+/* =========================================
+   VERY SMALL MOBILE
+========================================= */
+
+@media (
+  max-width: 420px
+) {
+
+  .btn-primary {
+
+    display:
+      none;
+  }
+
+
+  .navbar {
+
+    left:
+      16px;
+
+    right:
+      16px;
+  }
+
+
+  .navbar.scrolled {
+
+    left:
+      0;
+
+    right:
+      0;
+
+    padding-left:
+      16px;
+
+    padding-right:
+      16px;
+  }
+
+
+  .hero-section {
+
+    padding:
+      0
+      16px;
+  }
+
+
+  .bottom-tabs-bar {
+
+    left:
+      16px;
+
+    right:
+      16px;
+  }
+
+
+  .vertical-slider-nav {
+
+    right:
+      16px;
+  }
+
+
+  .hero-dots {
+
+    right:
+      16px;
   }
 
 }
 
 </style>
-

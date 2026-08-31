@@ -13,10 +13,13 @@ import PartnerLogosMarquee from './PartnerLogosMarquee.vue'
 import SeoFooter from './SeoFooter.vue'
 import CardSection from './CardSection.vue'
 import ServicesSection from './ServicesSection.vue'
+import TopBar from './TopBar.vue'
+import DirectorsSection from './DirectorsSection.vue'
 
 </script>
 
 <template>
+  <TopBar />
   <HeroSection />
   <div class="page">
     <PartnerLogosMarquee />
@@ -29,6 +32,7 @@ import ServicesSection from './ServicesSection.vue'
     <CareerPathway />
     <StudentStories />
     <ServicesSection />
+    <DirectorsSection />
   </div>
   <SeoFooter />
 </template>

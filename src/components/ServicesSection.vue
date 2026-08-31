@@ -44,9 +44,8 @@ const services = ref([
       <!-- HEADER -->
       <div class="services-header">
         <h2>
-          Trending Programmes to <em>Shape</em>
+          Trending Programmes to <br><em>Shape Your Career</em>
           <br class="desktop-br" />
-          Your Career
         </h2>
       </div>
 
