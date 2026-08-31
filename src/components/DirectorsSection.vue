@@ -6,7 +6,8 @@ const directors = ref([
     id: 1,
     name: 'Dr. Shaan Jayasekera',
     position: 'Chairman',
-    qualifications: 'PhD | MBA (Bus Fin) | BA (Hons) | CIMA Passed Finalist | ACIM | Dip.M',
+    qualifications:
+      'PhD | MBA (Bus Fin) | BA (Hons) | CIMA Passed Finalist | ACIM | Dip.M',
     image: 'images/director1.jpg',
     isLogo: false
   },
@@ -14,7 +15,8 @@ const directors = ref([
     id: 2,
     name: 'Shehan Fernando',
     position: 'CEO',
-    qualifications: 'FCCA | CIMA Passed Finalist | BBA (Bus. Econ. - 1st Class) | B.Sc (Applied Accounting)',
+    qualifications:
+      'FCCA | CIMA Passed Finalist | BBA (Bus. Econ. - 1st Class) | B.Sc (Applied Accounting)',
     image: 'images/director2.jpg',
     isLogo: false
   },
@@ -22,7 +24,8 @@ const directors = ref([
     id: 3,
     name: 'Dr. Prasenna Balachandran',
     position: 'Non-Executive Director',
-    qualifications: 'FCCA | CMA | AAT | BSc (Hons) | MIRM (UK)',
+    qualifications:
+      'FCCA | CMA | AAT | BSc (Hons) | MIRM (UK)',
     image: 'images/director3.jpg',
     isLogo: false
   },
@@ -41,7 +44,7 @@ const directors = ref([
   <section class="directors-section">
     <div class="directors-container">
 
-      <!-- SECTION HEADER -->
+      <!-- HEADER -->
       <div class="directors-header">
         <h2>
           Building a Legacy:
@@ -63,13 +66,9 @@ const directors = ref([
           class="director-card"
         >
           <!-- IMAGE -->
-          <a
-            :href="director.link"
+          <div
             class="director-image-wrap"
             :class="{ 'logo-card': director.isLogo }"
-            target="_blank"
-            rel="noopener noreferrer"
-            :aria-label="director.name"
           >
             <img
               :src="director.image"
@@ -77,18 +76,13 @@ const directors = ref([
               class="director-photo"
               loading="lazy"
             />
-          </a>
+          </div>
 
           <!-- CONTENT -->
           <div class="director-content">
-            <a
-              :href="director.link"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="director-name"
-            >
+            <h3 class="director-name">
               {{ director.name }}
-            </a>
+            </h3>
 
             <span class="director-position">
               {{ director.position }}
@@ -109,25 +103,20 @@ const directors = ref([
 
 /* =========================================
    SECTION
-   SAME THEME AS WHY ALPHA
 ========================================= */
 
 .directors-section {
-  width: 100vw;
+  width: 100%;
   max-width: 100%;
 
-  background: #ffffff;
-
-  border-radius:
-    clamp(8px, 1.2vw, 16px);
-
-  padding: 5% 3% 5% 3%;
+  padding: 5% 3%;
 
   margin-top:
     clamp(12px, 2vh, 24px);
 
+  background: #ffffff;
+
   box-sizing: border-box;
-  overflow: hidden;
 
   font-family:
     'Oakes Grotesk',
@@ -135,6 +124,8 @@ const directors = ref([
     -apple-system,
     BlinkMacSystemFont,
     sans-serif;
+
+  overflow: hidden;
 }
 
 
@@ -144,7 +135,14 @@ const directors = ref([
 
 .directors-container {
   width: 100%;
-  max-width: 1240px;
+
+  /*
+    Slightly narrower than before.
+    This stops the portraits becoming
+    too large on wide desktop screens.
+  */
+  max-width:
+    clamp(1000px, 82vw, 1180px);
 
   margin: 0 auto;
 }
@@ -161,9 +159,8 @@ const directors = ref([
     clamp(560px, 52vw, 720px);
 
   margin:
-    0
-    auto
-    clamp(35px, 5vh, 58px);
+    0 auto
+    clamp(38px, 5vh, 58px);
 
   text-align: center;
 }
@@ -171,19 +168,16 @@ const directors = ref([
 
 .directors-header h2 {
   margin:
-    0
-    0
-    clamp(10px, 1.5vh, 18px)
-    0;
+    0 0
+    clamp(10px, 1.5vh, 18px);
 
   font-size:
     clamp(22px, 2.2vw, 36px);
 
   font-weight: 600;
+  line-height: 1.2;
 
   color: #0f172a;
-
-  line-height: 1.2;
 
   font-family: inherit;
 }
@@ -198,9 +192,9 @@ const directors = ref([
 
 
 .directors-header p {
-  margin: 0 auto;
-
   max-width: 650px;
+
+  margin: 0 auto;
 
   font-size:
     clamp(12px, 0.9vw, 15px);
@@ -208,8 +202,6 @@ const directors = ref([
   line-height: 1.5;
 
   color: #64748b;
-
-  font-family: inherit;
 }
 
 
@@ -226,7 +218,7 @@ const directors = ref([
     repeat(4, minmax(0, 1fr));
 
   gap:
-    clamp(22px, 10vw, 54px);
+    clamp(24px, 2.5vw, 42px);
 }
 
 
@@ -239,6 +231,7 @@ const directors = ref([
 
   display: flex;
   flex-direction: column;
+
   transition:
     transform 0.3s ease;
 }
@@ -246,12 +239,14 @@ const directors = ref([
 
 .director-card:hover {
   transform:
-    translateY(-0.5vh);
+    translateY(-0.4vh);
 }
 
 
 /* =========================================
-   IMAGE WRAPPER
+   IMAGE AREA
+
+   REDUCED HEIGHT
 ========================================= */
 
 .director-image-wrap {
@@ -259,68 +254,77 @@ const directors = ref([
 
   width: 100%;
 
-  height:
-    clamp(300px, 42vh, 420px);
+  /*
+    Previously:
+    clamp(300px, 42vh, 420px)
 
-  display: block;
+    Now significantly smaller.
+  */
+  height:
+    clamp(230px, 29vw, 310px);
+
+  display: flex;
+
+  align-items: flex-end;
+  justify-content: center;
 
   background: #ffffff;
 
   border-radius:
-    clamp(12px, 1.5vw, 20px);
+    clamp(10px, 1.2vw, 16px);
 
   overflow: hidden;
 
-  text-decoration: none;
+  box-sizing: border-box;
 }
 
 
 /* =========================================
-   DIRECTOR PHOTOS
-   FORCE IMAGE TO COVER THE WHOLE CARD
+   PEOPLE
+
+   IMPORTANT:
+   contain + scale keeps people smaller
+   instead of zooming them into the card.
 ========================================= */
 
 .director-photo {
-  position: absolute;
-
-  inset: 0;
-
   width: 100%;
   height: 100%;
 
   display: block;
 
-  object-fit: cover;
-  object-position: center top;
+  object-fit: contain;
+  object-position: center bottom;
 
-  transform: scale(1.08);
+  /*
+    Makes the person visually smaller.
+  */
+  transform: scale(0.90);
+
+  transform-origin: center bottom;
 
   transition:
     transform 0.35s ease;
 }
 
 
+/* subtle hover — don't over-enlarge */
 .director-card:hover
 .director-photo {
-  transform: scale(1.12);
+  transform: scale(0.94);
 }
 
 
 /* =========================================
-   AIA LOGO CARD
-   LOGOS SHOULD NOT BE CROPPED
+   LOGO CARD
 ========================================= */
 
 .director-image-wrap.logo-card {
-  display: flex;
-
   align-items: center;
   justify-content: center;
 
   padding:
-    clamp(22px, 2.5vw, 38px);
-
-  box-sizing: border-box;
+    clamp(28px, 3vw, 48px);
 
   background: #ffffff;
 }
@@ -328,45 +332,22 @@ const directors = ref([
 
 .director-image-wrap.logo-card
 .director-photo {
-  position: static;
-
   width: 100%;
   height: 100%;
 
   object-fit: contain;
   object-position: center;
 
-  transform: none;
+  transform: scale(0.82);
+
+  transform-origin: center;
 }
 
 
 .director-card:hover
 .director-image-wrap.logo-card
 .director-photo {
-  transform: scale(1.03);
-}
-
-
-/* =========================================
-   REMOVE ANY OLD ARROWS / CUTOUTS
-========================================= */
-
-.director-arrow,
-.director-card-arrow,
-.card-arrow,
-.corner-cutout,
-.director-link-arrow {
-  display: none !important;
-}
-
-
-.director-card::before,
-.director-card::after,
-.director-image-wrap::before,
-.director-image-wrap::after {
-  content: none !important;
-
-  display: none !important;
+  transform: scale(0.86);
 }
 
 
@@ -376,7 +357,7 @@ const directors = ref([
 
 .director-content {
   padding-top:
-    clamp(10px, 1.5vh, 16px);
+    clamp(10px, 1.3vh, 15px);
 }
 
 
@@ -385,15 +366,12 @@ const directors = ref([
 ========================================= */
 
 .director-name {
-  display: inline-block;
-
   margin:
-    0
-    0
-    clamp(5px, 0.6vh, 8px);
+    0 0
+    clamp(4px, 0.5vh, 7px);
 
   font-size:
-    clamp(15px, 1.1vw, 19px);
+    clamp(15px, 1.05vw, 18px);
 
   font-weight: 600;
 
@@ -401,17 +379,7 @@ const directors = ref([
 
   color: #0f172a;
 
-  text-decoration: none;
-
   font-family: inherit;
-
-  transition:
-    opacity 0.2s ease;
-}
-
-
-.director-name:hover {
-  opacity: 0.65;
 }
 
 
@@ -423,10 +391,10 @@ const directors = ref([
   display: block;
 
   margin-bottom:
-    clamp(6px, 0.8vh, 9px);
+    clamp(5px, 0.7vh, 8px);
 
   font-size:
-    clamp(10px, 0.75vw, 12px);
+    clamp(9px, 0.68vw, 11px);
 
   font-weight: 700;
 
@@ -437,29 +405,24 @@ const directors = ref([
   text-transform: uppercase;
 
   color: #0f172a;
-
-  font-family: inherit;
 }
 
 
 /* =========================================
    QUALIFICATIONS
-   SINGLE LINE / WRAPPED WITH | SEPARATORS
 ========================================= */
 
 .director-qualifications {
   margin: 0;
 
   font-size:
-    clamp(11px, 0.8vw, 13px);
+    clamp(10px, 0.75vw, 12px);
 
   font-weight: 400;
 
   line-height: 1.55;
 
   color: #64748b;
-
-  font-family: inherit;
 }
 
 
@@ -468,6 +431,11 @@ const directors = ref([
 ========================================= */
 
 @media (max-width: 900px) {
+
+  .directors-container {
+    max-width: 100%;
+  }
+
 
   .directors-header {
     max-width: 100%;
@@ -491,14 +459,25 @@ const directors = ref([
       repeat(2, minmax(0, 1fr));
 
     gap:
-      clamp(28px, 4vh, 40px)
-      clamp(12px, 1.5vw, 24px);
+      clamp(30px, 5vh, 44px)
+      clamp(16px, 3vw, 28px);
   }
 
 
   .director-image-wrap {
     height:
-      clamp(280px, 40vh, 360px);
+      clamp(250px, 36vw, 330px);
+  }
+
+
+  .director-photo {
+    transform: scale(0.92);
+  }
+
+
+  .director-card:hover
+  .director-photo {
+    transform: scale(0.96);
   }
 
 }
@@ -510,9 +489,14 @@ const directors = ref([
 
 @media (max-width: 640px) {
 
+  .directors-section {
+    padding: 10% 5%;
+  }
+
+
   .directors-header {
     margin-bottom:
-      clamp(28px, 4vh, 36px);
+      clamp(28px, 5vh, 38px);
   }
 
 
@@ -520,13 +504,33 @@ const directors = ref([
     grid-template-columns: 1fr;
 
     gap:
-      clamp(30px, 5vh, 42px);
+      clamp(34px, 6vh, 48px);
+  }
+
+
+  .director-card {
+    max-width: 430px;
+
+    width: 100%;
+
+    margin: 0 auto;
   }
 
 
   .director-image-wrap {
     height:
-      clamp(320px, 52vh, 440px);
+      clamp(270px, 80vw, 360px);
+  }
+
+
+  .director-photo {
+    transform: scale(0.92);
+  }
+
+
+  .director-card:hover
+  .director-photo {
+    transform: scale(0.95);
   }
 
 
