@@ -7,31 +7,31 @@ const activeIndex = ref(0)
 const whyAlphaCards = ref([
   {
     id: 1,
-    title: 'Sports & Athletics',
-    image: 'https://images.unsplash.com/photo-1602432141202-e8b683524997?q=80&w=1035&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    title: 'World Class Lecturers',
+    image: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/7b/1e/94/0d/01/v1_E10/E106HIVT.JPG?w=800&cf_fit=scale-down&q=85&format=auto&s=96f610dc615e2112a640f742a5fed294ca2808adec5789f7a8a6b654c1fe6656',
     linkUrl: '#'
   },
   {
     id: 2,
-    title: 'Global Alumni Network',
+    title: 'Modes of Study to Choose From',
     image: 'https://images.unsplash.com/photo-1765020553499-1ec9aeb21298?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDg2fHx8ZW58MHx8fHx8',
     linkUrl: '#'
   },
   {
     id: 3,
-    title: 'Career & Industry Placement',
+    title: 'Excellent Pass Rates',
     image: 'https://images.unsplash.com/photo-1555725305-e823b44548de?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDN8fHxlbnwwfHx8fHw%3D',
     linkUrl: '#'
   },  
   {
     id: 4,
-    title: 'Student Clubs & Societies',
-    image: 'https://plus.unsplash.com/premium_photo-1685366454253-cb705836c5a8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    title: 'Comprehensive Material',
+    image: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/1da902e5-8bb7-4bc2-883f-e253ca487511/1ad7916d-dae8-41c7-9919-32776a57c909.jpg?w=800&cf_fit=scale-down&q=85&format=auto&s=d68acb5096c216f68dfd17406d1aff15be15f4d96fdba03d1f5880b867431f32',
     linkUrl: '#'
   },
   {
     id: 5,
-    title: 'Campus Life & Events',
+    title: 'Recordings at Your Convenience',
     image: 'https://plus.unsplash.com/premium_photo-1683887034552-4635692bb57c?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     linkUrl: '#'
   },
