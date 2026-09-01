@@ -8,19 +8,19 @@ const courseCards = ref([
   {
     id: 1,
     title: 'Accounting & Finance',
-    image: 'https://images.unsplash.com/photo-1554224155-3a58922a22c3?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fEFjY291bnRpbmclMjAlMjYlMjBGaW5hbmNlfGVufDB8fDB8fHww',
+    image: 'https://images.unsplash.com/photo-1771240730278-55a716725567?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     linkUrl: '#'
   },
   {
     id: 2,
     title: 'Business & Management',
-    image: 'https://plus.unsplash.com/premium_photo-1661431396990-7bc93ef3edec?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjR8fEJ1c2luZXNzJTIwJTI2JTIwTWFuYWdlbWVudHxlbnwwfHwwfHx8MA%3D%3D',
+    image: 'https://images.unsplash.com/photo-1776248783518-400b6d0da64c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     linkUrl: '#'
   },
   {
     id: 3,
     title: 'Auditing & Risk',
-    image: 'https://images.unsplash.com/photo-1660020619062-70b16c44bf0f?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDQ1fHx8ZW58MHx8fHx8',
+    image: 'https://images.unsplash.com/photo-1771244688590-1e481dba1b5a?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDd8fHxlbnwwfHx8fHw%3D',
     linkUrl: '#'
   },
   {

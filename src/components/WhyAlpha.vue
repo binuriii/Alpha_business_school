@@ -14,13 +14,13 @@ const whyAlphaCards = ref([
   {
     id: 2,
     title: 'Global Alumni Network',
-    image: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDQyfHx8ZW58MHx8fHx8',
+    image: 'https://images.unsplash.com/photo-1765020553499-1ec9aeb21298?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDg2fHx8ZW58MHx8fHx8',
     linkUrl: '#'
   },
   {
     id: 3,
     title: 'Career & Industry Placement',
-    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=900&auto=format&fit=crop&q=60',
+    image: 'https://images.unsplash.com/photo-1555725305-e823b44548de?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDN8fHxlbnwwfHx8fHw%3D',
     linkUrl: '#'
   },  
   {

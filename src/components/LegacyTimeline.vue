@@ -14,7 +14,7 @@ const milestones = [
     year: '1972',
     title: 'The Alpha Business School is established',
     description: 'Created by an Act of the Victorian Parliament, the Leo Cussen Institute was founded as a not-for-profit statutory body dedicated to practical legal education and professional development.',
-    image: 'https://images.unsplash.com/photo-1598058921517-81a452bc7cce?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+    image: 'https://images.unsplash.com/photo-1762245955112-b3170b131b0d?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDV8fHxlbnwwfHx8fHw%3D'
   },
   {
     year: '2010',

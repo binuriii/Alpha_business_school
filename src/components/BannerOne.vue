@@ -9,7 +9,7 @@ const bannerData = ref({
   buttonText: 'Explore Your Options',
   buttonUrl: '#',
   bgImage:
-    'https://images.unsplash.com/photo-1568792923760-d70635a89fdc?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+    'https://images.unsplash.com/photo-1592114714621-ccc6cacad26b?q=80&w=2043&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
 })
 const handleContact = () => {
   // Add your action handler here
