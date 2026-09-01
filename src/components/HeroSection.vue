@@ -19,6 +19,9 @@ const activeTab = ref(0)
 ========================================= */
 
 const openDropdown = ref(null)
+const openFlyout = ref(null)
+const activeSubNav = ref(null)
+const selectedByParent = ref({})
 const navLinksRef = ref(null)
 
 const toggleDropdown = (label) => {
@@ -26,11 +29,51 @@ const toggleDropdown = (label) => {
     openDropdown.value === label
       ? null
       : label
+
+  openFlyout.value = null
 }
 
 const closeDropdowns = () => {
   openDropdown.value = null
+  openFlyout.value = null
 }
+
+const toggleFlyout = (label, event) => {
+  if (event) {
+    event.stopPropagation()
+  }
+
+  openFlyout.value =
+    openFlyout.value === label
+      ? null
+      : label
+}
+
+const selectSubmenuItem = (
+  parentItem,
+  subItem
+) => {
+  activeNav.value = parentItem.label
+  activeSubNav.value = subItem.label
+
+  selectedByParent.value = {
+    ...selectedByParent.value,
+    [parentItem.label]: {
+      label: subItem.label,
+      flag: subItem.flag || null
+    }
+  }
+
+  closeDropdowns()
+}
+
+const displayLabel = (item) =>
+  selectedByParent.value[item.label]?.label ||
+  item.label
+
+const displayFlag = (item) =>
+  selectedByParent.value[item.label]?.flag ??
+  item.flag
 
 const handleOutsideClick = (event) => {
   if (
@@ -40,11 +83,6 @@ const handleOutsideClick = (event) => {
     closeDropdowns()
   }
 }
-
-
-/* =========================================
-   HERO SLIDESHOW
-========================================= */
 
 const currentSlide = ref(0)
 
@@ -136,11 +174,6 @@ const restartSlider = () => {
   startSlider()
 }
 
-
-/* =========================================
-   HEADER SCROLL STATE
-========================================= */
-
 const isScrolled = ref(false)
 
 const handleScroll = () => {
@@ -148,75 +181,63 @@ const handleScroll = () => {
     window.scrollY > 40
 }
 
-
-/* =========================================
-   LOGO FALLBACK
-========================================= */
-
 const darkLogoFailed = ref(false)
 
 const handleDarkLogoError = () => {
   darkLogoFailed.value = true
 }
 
-
-/* =========================================
-   NAV ITEMS — Alpha Business School / CFA
-========================================= */
-
 const navItems = [
   {
     label: 'Home',
-    submenu: null
+    flag: null,
+    submenu: [
+      { label: 'About Alpha', flag: null },
+      {
+        label: 'Media',
+        flag: null,
+        children: [
+          { label: 'After OL or AL ?' }
+        ]
+      }
+    ]
   },
   {
     label: 'ACCA',
-    submenu: [
-      'ACCA Fundamentals',
-      'ACCA Professional',
-      'ACCA Fees',
-      'ACCA Lecture Panel'
-    ]
+    flag: 'gb',
+    submenu: null
   },
   {
     label: 'CFA',
+    flag: 'us',
+    submenu: null
+  },
+  {
+    label: 'Courses',
+    flag: null,
     submenu: [
-      'CFA Level I',
-      'CFA Fees',
-      'CFA Lecture Panel',
-      'CFA Application'
+      { label: 'ACCA', flag: 'gb' },
+      { label: 'CFA', flag: 'us' },
+      { label: 'CPA Australia', flag: 'au' },
+      { label: 'Financial Modeling', flag: 'ca' },
+      { label: 'Financial Risk Management', flag: 'us' },
+      { label: 'CIA – Certified Internal Auditor', flag: null },
+      { label: 'English', flag: null }
     ]
   },
   {
-    label: 'CPA Australia',
-    submenu: [
-      'CPA Program',
-      'CPA Fees',
-      'CPA Lecture Panel'
-    ]
-  },
-  {
-    label: 'About Us',
-    submenu: [
-      'Our Story',
-      'Management Team',
-      'Contact Us'
-    ]
+    label: 'Contact',
+    flag: null,
+    submenu: null
   }
 ]
 
+const flagUrl = (code) =>
+  `https://flagcdn.com/w80/${code}.png`
 
-/* =========================================
-   REAL CONTACT NUMBER
-========================================= */
 
 const phoneNumber = '+94 77 365 4254'
 const phoneHref = 'tel:+94773654254'
-
-
-/* =========================================
-   HERO BOTTOM TABS — CFA program highlights
-========================================= */
 
 const tabs = ref([
   {
@@ -239,11 +260,6 @@ const tabs = ref([
       '250+ hours of live lectures & recorded access'
   }
 ])
-
-
-/* =========================================
-   COMPONENT MOUNTED
-========================================= */
 
 onMounted(() => {
 
@@ -284,10 +300,6 @@ onMounted(() => {
 })
 
 
-/* =========================================
-   COMPONENT DESTROY
-========================================= */
-
 onUnmounted(() => {
 
   window.removeEventListener(
@@ -309,11 +321,6 @@ onUnmounted(() => {
 
   <div class="hero-wrapper">
 
-
-    <!-- =========================================
-         NAVIGATION BAR
-    ========================================== -->
-
     <header
       class="navbar"
       :class="{
@@ -321,10 +328,6 @@ onUnmounted(() => {
       }"
     >
 
-
-      <!-- =========================================
-           LOGO
-      ========================================== -->
 
       <div class="logo">
 
@@ -361,11 +364,6 @@ onUnmounted(() => {
 
       </div>
 
-
-      <!-- =========================================
-           NAVIGATION LINKS
-      ========================================== -->
-
       <nav
         class="nav-links"
         ref="navLinksRef"
@@ -393,8 +391,23 @@ onUnmounted(() => {
             "
           >
 
+            <!-- FLAG BADGE (glass circle, filled with flag) -->
+
+            <span
+              v-if="displayFlag(item)"
+              class="nav-flag"
+              :aria-label="`${displayLabel(item)} flag`"
+            >
+              <img
+                :src="flagUrl(displayFlag(item))"
+                :alt="`${displayLabel(item)} flag`"
+                class="nav-flag-img"
+              />
+            </span>
+
+
             <span>
-              {{ item.label }}
+              {{ displayLabel(item) }}
             </span>
 
 
@@ -422,17 +435,129 @@ onUnmounted(() => {
               class="dropdown-menu"
             >
 
-              <a
+              <div
                 v-for="sub in item.submenu"
-                :key="sub"
-                href="#"
-                class="dropdown-menu-item"
-                @click.prevent="
-                  closeDropdowns()
-                "
+                :key="sub.label"
+                class="dropdown-row"
               >
-                {{ sub }}
-              </a>
+
+
+                <!-- LEAF ITEM (no children) -->
+
+                <a
+                  v-if="!sub.children"
+                  href="#"
+                  class="dropdown-menu-item"
+                  :class="{
+                    selected:
+                      activeSubNav === sub.label
+                  }"
+                  @click.prevent="
+                    selectSubmenuItem(
+                      item,
+                      sub
+                    )
+                  "
+                >
+
+                  <span
+                    v-if="sub.flag"
+                    class="nav-flag nav-flag-sm"
+                    :aria-label="`${sub.label} flag`"
+                  >
+                    <img
+                      :src="flagUrl(sub.flag)"
+                      :alt="`${sub.label} flag`"
+                      class="nav-flag-img"
+                    />
+                  </span>
+
+                  {{ sub.label }}
+
+                  <i
+                    v-if="activeSubNav === sub.label"
+                    class="fa-solid fa-check selected-check"
+                  ></i>
+
+                </a>
+
+
+                <!-- ITEM WITH NESTED FLYOUT (e.g. Media) -->
+
+                <div
+                  v-else
+                  class="dropdown-menu-item has-children"
+                  :class="{
+                    'flyout-open':
+                      openFlyout === sub.label
+                  }"
+                  @click.stop="
+                    toggleFlyout(sub.label, $event)
+                  "
+                >
+
+                  <span
+                    v-if="sub.flag"
+                    class="nav-flag nav-flag-sm"
+                    :aria-label="`${sub.label} flag`"
+                  >
+                    <img
+                      :src="flagUrl(sub.flag)"
+                      :alt="`${sub.label} flag`"
+                      class="nav-flag-img"
+                    />
+                  </span>
+
+                  <span class="dropdown-menu-item-label">
+                    {{ sub.label }}
+                  </span>
+
+                  <i
+                    class="fa-solid fa-chevron-right flyout-icon"
+                  ></i>
+
+
+                  <!-- NESTED FLYOUT PANEL -->
+
+                  <transition name="dropdown-fade">
+
+                    <div
+                      v-if="openFlyout === sub.label"
+                      class="flyout-menu"
+                      @click.stop
+                    >
+
+                      <a
+                        v-for="child in sub.children"
+                        :key="child.label"
+                        href="#"
+                        class="dropdown-menu-item"
+                        :class="{
+                          selected:
+                            activeSubNav === child.label
+                        }"
+                        @click.prevent="
+                          selectSubmenuItem(
+                            item,
+                            child
+                          )
+                        "
+                      >
+                        {{ child.label }}
+
+                        <i
+                          v-if="activeSubNav === child.label"
+                          class="fa-solid fa-check selected-check"
+                        ></i>
+                      </a>
+
+                    </div>
+
+                  </transition>
+
+                </div>
+
+              </div>
 
             </div>
 
@@ -441,29 +566,24 @@ onUnmounted(() => {
         </div>
 
 
-        <!-- APPLY NOW -->
+        <!-- MYALPHA -->
 
         <a
           href="#"
           class="nav-pill"
           :class="{
             active:
-              activeNav === 'Apply Now'
+              activeNav === 'MyAlpha'
           }"
           @click.prevent="
-            activeNav = 'Apply Now';
+            activeNav = 'MyAlpha';
             closeDropdowns()
           "
         >
-          Apply Now
+          MyAlpha
         </a>
 
       </nav>
-
-
-      <!-- =========================================
-           HEADER ACTIONS
-      ========================================== -->
 
       <div class="header-actions">
 
@@ -511,21 +631,11 @@ onUnmounted(() => {
 
     </header>
 
-
-    <!-- =========================================
-         HERO MAIN SECTION
-    ========================================== -->
-
     <section
       class="hero-section"
       @mouseenter="stopSlider"
       @mouseleave="startSlider"
     >
-
-
-      <!-- =========================================
-           HERO IMAGE SLIDESHOW
-      ========================================== -->
 
       <div class="hero-bg">
 
@@ -548,11 +658,6 @@ onUnmounted(() => {
         <div class="hero-overlay"></div>
 
       </div>
-
-
-      <!-- =========================================
-           HERO CONTENT
-      ========================================== -->
 
       <div class="hero-content">
 
@@ -600,11 +705,6 @@ onUnmounted(() => {
         </button>
 
       </div>
-
-
-      <!-- =========================================
-           VERTICAL SLIDER INDICATOR
-      ========================================== -->
 
       <div class="vertical-slider-nav">
 
@@ -688,11 +788,6 @@ onUnmounted(() => {
 
       </div>
 
-
-      <!-- =========================================
-           SLIDE DOTS
-      ========================================== -->
-
       <div class="hero-dots">
 
         <button
@@ -715,11 +810,6 @@ onUnmounted(() => {
         ></button>
 
       </div>
-
-
-      <!-- =========================================
-           BOTTOM TABS
-      ========================================== -->
 
       <div class="bottom-tabs-bar">
 
@@ -766,17 +856,13 @@ onUnmounted(() => {
 
 <style scoped>
 
-/* =========================================
-   HERO WRAPPER
-========================================= */
-
 .hero-wrapper {
 
   position: relative;
 
   width: 100%;
 
-  min-height: 100vh;
+  min-height: auto;
 
   background-color: #ffffff;
 
@@ -794,12 +880,10 @@ onUnmounted(() => {
     sans-serif;
 
   overflow: hidden;
+
+  --hero-height: 95vh;
 }
 
-
-/* =========================================
-   NAVBAR
-========================================= */
 
 .navbar {
 
@@ -866,11 +950,6 @@ onUnmounted(() => {
   z-index: 1500;
 }
 
-
-/* =========================================
-   LOGO
-========================================= */
-
 .logo {
 
   display: flex;
@@ -905,11 +984,6 @@ onUnmounted(() => {
   filter:
     brightness(0);
 }
-
-
-/* =========================================
-   NAVIGATION
-========================================= */
 
 .nav-links {
 
@@ -955,11 +1029,6 @@ onUnmounted(() => {
     border-color 0.3s ease;
 }
 
-
-/* =========================================
-   SCROLLED NAVIGATION
-========================================= */
-
 .navbar.scrolled .nav-links {
 
   background:
@@ -1004,18 +1073,13 @@ onUnmounted(() => {
     #0f172a;
 }
 
-
-/* =========================================
-   NAV ITEM
-========================================= */
-
 .nav-item {
 
   display: flex;
 
   align-items: center;
 
-  gap: 4px;
+  gap: 6px;
 
   color:
     rgba(
@@ -1066,21 +1130,216 @@ onUnmounted(() => {
     600;
 }
 
-
-/* =========================================
-   NAV ITEM WRAPPER (for dropdown positioning)
-========================================= */
-
 .nav-item-wrapper {
 
   position:
     relative;
 }
 
+.nav-flag {
 
-/* =========================================
-   DROPDOWN ICON (Font Awesome)
-========================================= */
+  position:
+    relative;
+
+  display:
+    inline-flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  width:
+    22px;
+
+  height:
+    22px;
+
+  border-radius:
+    50%;
+
+  border:
+    1.5px
+    solid
+    rgba(
+      255,
+      255,
+      255,
+      0.55
+    );
+
+  box-shadow:
+    0
+    2px
+    6px
+    rgba(
+      15,
+      23,
+      42,
+      0.18
+    ),
+    inset
+    0
+    0
+    0
+    1px
+    rgba(
+      255,
+      255,
+      255,
+      0.15
+    );
+
+  overflow:
+    hidden;
+
+  flex-shrink:
+    0;
+}
+
+
+/* FLAG IMAGE — fills the circle completely */
+
+.nav-flag-img {
+
+  width:
+    100%;
+
+  height:
+    100%;
+
+  object-fit:
+    cover;
+
+  object-position:
+    center;
+
+  display:
+    block;
+}
+
+
+/* GLASS SHEEN OVERLAY ON TOP OF THE FLAG */
+
+.nav-flag::after {
+
+  content:
+    '';
+
+  position:
+    absolute;
+
+  inset:
+    0;
+
+  border-radius:
+    50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(
+        255,
+        255,
+        255,
+        0.55
+      )
+      0%,
+
+      rgba(
+        255,
+        255,
+        255,
+        0.08
+      )
+      35%,
+
+      rgba(
+        255,
+        255,
+        255,
+        0)
+      55%,
+
+      rgba(
+        0,
+        0,
+        0,
+        0.12
+      )
+      100%
+    );
+
+  pointer-events:
+    none;
+}
+
+
+/* SMALLER FLAG VARIANT FOR DROPDOWN ROWS */
+
+.nav-flag-sm {
+
+  width:
+    20px;
+
+  height:
+    20px;
+
+  margin-right:
+    8px;
+}
+
+
+/* SCROLLED / LIGHT BACKGROUND VERSION */
+
+.navbar.scrolled .nav-flag {
+
+  background:
+    rgba(
+      15,
+      23,
+      42,
+      0.06
+    );
+
+  border-color:
+    rgba(
+      15,
+      23,
+      42,
+      0.1
+    );
+
+  box-shadow:
+    none;
+}
+
+
+/* FLAG INSIDE DROPDOWN (always on white bg) */
+
+.dropdown-menu-item .nav-flag {
+
+  background:
+    rgba(
+      15,
+      23,
+      42,
+      0.06
+    );
+
+  border-color:
+    rgba(
+      15,
+      23,
+      42,
+      0.1
+    );
+
+  box-shadow:
+    none;
+}
+
 
 .dropdown-icon {
 
@@ -1102,10 +1361,6 @@ onUnmounted(() => {
 }
 
 
-/* =========================================
-   DROPDOWN MENU
-========================================= */
-
 .dropdown-menu {
 
   position:
@@ -1118,7 +1373,7 @@ onUnmounted(() => {
     0;
 
   min-width:
-    200px;
+    220px;
 
   background:
     #ffffff;
@@ -1156,6 +1411,15 @@ onUnmounted(() => {
 
 .dropdown-menu-item {
 
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    2px;
+
   color:
     #475569;
 
@@ -1175,6 +1439,9 @@ onUnmounted(() => {
   border-radius:
     9px;
 
+  cursor:
+    pointer;
+
   transition:
     background 0.15s ease,
     color 0.15s ease;
@@ -1188,6 +1455,143 @@ onUnmounted(() => {
 
   color:
     #0f172a;
+}
+
+
+/* ROW WRAPPER (needed so the flyout can anchor to it) */
+
+.dropdown-row {
+
+  position:
+    relative;
+}
+
+
+/* SELECTED SUBMENU ITEM */
+
+.dropdown-menu-item.selected {
+
+  background:
+    #ecfccb;
+
+  color:
+    #365314;
+
+  font-weight:
+    600;
+}
+
+
+.selected-check {
+
+  margin-left:
+    auto;
+
+  font-size:
+    11px;
+
+  color:
+    #65a30d;
+}
+
+
+/* ROW WITH A NESTED FLYOUT (e.g. Media) */
+
+.dropdown-menu-item.has-children {
+
+  justify-content:
+    space-between;
+}
+
+
+.dropdown-menu-item-label {
+
+  flex:
+    1;
+}
+
+
+.flyout-icon {
+
+  font-size:
+    10px;
+
+  color:
+    #94a3b8;
+
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease;
+}
+
+
+.dropdown-menu-item.has-children.flyout-open {
+
+  background:
+    #f4f4f5;
+
+  color:
+    #0f172a;
+}
+
+
+.dropdown-menu-item.has-children.flyout-open .flyout-icon {
+
+  color:
+    #0f172a;
+
+  transform:
+    translateX(2px);
+}
+
+
+/* NESTED FLYOUT PANEL */
+
+.flyout-menu {
+
+  position:
+    absolute;
+
+  top:
+    0;
+
+  left:
+    calc(100% + 10px);
+
+  min-width:
+    190px;
+
+  background:
+    #ffffff;
+
+  border-radius:
+    14px;
+
+  box-shadow:
+    0
+    14px
+    32px
+    rgba(
+      15,
+      23,
+      42,
+      0.18
+    );
+
+  padding:
+    8px;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    2px;
+
+  z-index:
+    2100;
 }
 
 
@@ -1211,11 +1615,6 @@ onUnmounted(() => {
   transform:
     translateY(-6px);
 }
-
-
-/* =========================================
-   APPLY NOW PILL
-========================================= */
 
 .nav-pill {
 
@@ -1269,10 +1668,6 @@ onUnmounted(() => {
 }
 
 
-/* =========================================
-   HEADER ACTIONS
-========================================= */
-
 .header-actions {
 
   display: flex;
@@ -1282,10 +1677,6 @@ onUnmounted(() => {
   gap: 12px;
 }
 
-
-/* =========================================
-   SEARCH BUTTON
-========================================= */
 
 .icon-btn {
 
@@ -1348,11 +1739,6 @@ onUnmounted(() => {
     #0f172a;
 }
 
-
-/* =========================================
-   CONTACT BUTTON
-========================================= */
-
 .btn-primary {
 
   background:
@@ -1400,11 +1786,6 @@ onUnmounted(() => {
     translateY(-1px);
 }
 
-
-/* =========================================
-   HERO SECTION
-========================================= */
-
 .hero-section {
 
   position: relative;
@@ -1413,7 +1794,7 @@ onUnmounted(() => {
 
   height:
     calc(
-      100vh - 32px
+      var(--hero-height) - 32px
     );
 
   border-radius:
@@ -1435,11 +1816,6 @@ onUnmounted(() => {
   box-sizing:
     border-box;
 }
-
-
-/* =========================================
-   HERO BACKGROUND
-========================================= */
 
 .hero-bg {
 
@@ -1464,11 +1840,6 @@ onUnmounted(() => {
   background:
     #111827;
 }
-
-
-/* =========================================
-   HERO SLIDES
-========================================= */
 
 .hero-slide {
 
@@ -1525,11 +1896,6 @@ onUnmounted(() => {
   z-index:
     2;
 }
-
-
-/* =========================================
-   HERO OVERLAY
-========================================= */
 
 .hero-overlay {
 
@@ -1588,11 +1954,6 @@ onUnmounted(() => {
     );
 }
 
-
-/* =========================================
-   HERO CONTENT
-========================================= */
-
 .hero-content {
 
   position:
@@ -1604,11 +1965,6 @@ onUnmounted(() => {
   max-width:
     600px;
 }
-
-
-/* =========================================
-   HERO TITLE
-========================================= */
 
 .hero-title {
 
@@ -1638,11 +1994,6 @@ onUnmounted(() => {
     -1px;
 }
 
-
-/* =========================================
-   GREEN LINE
-========================================= */
-
 .title-line {
 
   display:
@@ -1663,11 +2014,6 @@ onUnmounted(() => {
   margin-left:
     8px;
 }
-
-
-/* =========================================
-   HERO BUTTON
-========================================= */
 
 .btn-action {
 
@@ -1718,11 +2064,6 @@ onUnmounted(() => {
     translateY(-2px);
 }
 
-
-/* =========================================
-   ACTION ICON
-========================================= */
-
 .action-icon {
 
   width:
@@ -1765,11 +2106,6 @@ onUnmounted(() => {
     #0f172a;
 }
 
-
-/* =========================================
-   VERTICAL SLIDER
-========================================= */
-
 .vertical-slider-nav {
 
   position:
@@ -1811,11 +2147,6 @@ onUnmounted(() => {
     12px;
 }
 
-
-/* =========================================
-   NUMBER BUTTONS
-========================================= */
-
 .slider-number-button {
 
   padding:
@@ -1844,11 +2175,6 @@ onUnmounted(() => {
   cursor:
     pointer;
 }
-
-
-/* =========================================
-   SLIDER TRACK
-========================================= */
 
 .slider-track {
 
@@ -1879,11 +2205,6 @@ onUnmounted(() => {
     pointer;
 }
 
-
-/* =========================================
-   SLIDER PROGRESS
-========================================= */
-
 .slider-thumb {
 
   width:
@@ -1907,11 +2228,6 @@ onUnmounted(() => {
   transition:
     height 0.5s ease;
 }
-
-
-/* =========================================
-   SLIDE DOTS
-========================================= */
 
 .hero-dots {
 
@@ -1981,11 +2297,6 @@ onUnmounted(() => {
     #a3e635;
 }
 
-
-/* =========================================
-   BOTTOM TABS
-========================================= */
-
 .bottom-tabs-bar {
 
   position:
@@ -2009,11 +2320,6 @@ onUnmounted(() => {
   gap:
     16px;
 }
-
-
-/* =========================================
-   TAB ITEM
-========================================= */
 
 .tab-item {
 
@@ -2087,11 +2393,6 @@ onUnmounted(() => {
     transform 0.3s ease;
 }
 
-
-/* =========================================
-   TAB HOVER
-========================================= */
-
 .tab-item:hover {
 
   background:
@@ -2109,11 +2410,6 @@ onUnmounted(() => {
     translateY(-2px);
 }
 
-
-/* =========================================
-   DISABLED TAB
-========================================= */
-
 .tab-item:disabled {
 
   opacity:
@@ -2122,11 +2418,6 @@ onUnmounted(() => {
   cursor:
     default;
 }
-
-
-/* =========================================
-   ACTIVE TAB
-========================================= */
 
 .tab-item.active {
 
@@ -2150,11 +2441,6 @@ onUnmounted(() => {
     );
 }
 
-
-/* =========================================
-   TAB LABEL
-========================================= */
-
 .tab-label {
 
   display:
@@ -2172,11 +2458,6 @@ onUnmounted(() => {
   line-height:
     1.2;
 }
-
-
-/* =========================================
-   TAB DETAIL
-========================================= */
 
 .tab-detail {
 
@@ -2205,11 +2486,6 @@ onUnmounted(() => {
   opacity:
     0.65;
 }
-
-
-/* =========================================
-   TABLET
-========================================= */
 
 @media (
   max-width: 1100px
@@ -2280,11 +2556,6 @@ onUnmounted(() => {
   }
 
 }
-
-
-/* =========================================
-   SMALL TABLET
-========================================= */
 
 @media (
   max-width: 900px
@@ -2376,11 +2647,6 @@ onUnmounted(() => {
 
 }
 
-
-/* =========================================
-   MOBILE
-========================================= */
-
 @media (
   max-width: 600px
 ) {
@@ -2396,7 +2662,7 @@ onUnmounted(() => {
 
     height:
       calc(
-        100vh - 16px
+        var(--hero-height) - 16px
       );
 
     min-height:
@@ -2555,11 +2821,6 @@ onUnmounted(() => {
   }
 
 }
-
-
-/* =========================================
-   VERY SMALL MOBILE
-========================================= */
 
 @media (
   max-width: 420px

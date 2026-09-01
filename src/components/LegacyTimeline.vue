@@ -72,7 +72,7 @@ const nextMilestone = () => {
     <div class="champions-grid">
       <!-- LEFT LARGE IMAGE CARD WITH OVERLAY FOOTER -->
       <div class="large-hero-card">
-        <img src="/images/large.png" alt="Tennis player holding racket" />
+        <img src="https://elements-resized.envatousercontent.com/envato-dam-assets-production/portfolio-manager/e0e5a5b2-f5e5-4863-8522-268bae8c0a68/97063e96-a4a8-49e2-ab0e-2d552bce0dc2/DSC_4794.jpg?w=800&cf_fit=scale-down&q=85&format=auto&s=57fde5b301ed9ecd264263d03ed5258a07f1e0acc91a9f4d73514f8ca27ef634" alt="Tennis player holding racket" />
         <div class="card-overlay-footer">
           <div class="overlay-stat">
             <span class="stat-value">25+</span>
@@ -95,7 +95,7 @@ Industry Lecturers</span>
       <!-- RIGHT SIDE: SMALL IMAGE + STAT BLOCK -->
       <div class="champions-right-col">
         <div class="small-image-card">
-          <img src="https://images.unsplash.com/photo-1565351311113-3c5d50eb3c0c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Female tennis player on court" />
+          <img src="https://elements-resized.envatousercontent.com/envato-dam-assets-production/portfolio-manager/e0e5a5b2-f5e5-4863-8522-268bae8c0a68/22f8955b-7da0-4e15-bd8c-f7027a2561ec/DSC_4085.jpg?w=800&cf_fit=scale-down&q=85&format=auto&s=49940a783f923b0272e275b0cb27f4d1272e25c28b4fcf5a7a14e33920e942d5" alt="Female tennis player on court" />
         </div>
 
         <div class="excellence-stats-block">

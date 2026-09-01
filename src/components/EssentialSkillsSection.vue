@@ -8,25 +8,26 @@ const essentialSkillsCards = ref([
   {
     id: 1,
     title: 'ACCA',
-    image: 'https://images.unsplash.com/photo-1755548788292-7d4ab8f00634?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTB8fFdvcmxkJTIwQ2xhc3MlMjBMZWN0dXJlcnN8ZW58MHx8MHx8fDA%3D',
+    image: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/43/94/6d/b3/c5/v1_E11/E118XP92.jpg?w=800&cf_fit=scale-down&q=85&format=auto&s=7a4758d026b0d502377e0d5cf65beeb23117ec7a8851fa877d6cb8228e23154f',
     linkUrl: '#'
   },
   {
     id: 2,
     title: 'CFA',
-    image: 'https://images.unsplash.com/photo-1759852692971-a2abc6799cbd?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8ODl8fE1vZGVzJTIwb2YlMjBTdHVkeSUyMHRvJTIwQ2hvb3NlJTIwRnJvbXxlbnwwfHwwfHx8MA%3D%3D',
+    image: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/portfolio-manager/e0e5a5b2-f5e5-4863-8522-268bae8c0a68/4b8e6d86-a052-421c-9ca9-ee40c4ff84f5/DSC_5133.jpg?w=800&cf_fit=scale-down&q=85&format=auto&s=ce7ab5731c805bc6eb68edd1f99f5a1148bf8230e7d9ab6255183a775e745db6',
     linkUrl: '#'
   },
   {
     id: 3,
     title: 'CPA Australia',
-    image: 'https://images.unsplash.com/photo-1574966390692-5140d4310743?q=80&w=1035&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    image: 'https://images.unsplash.com/photo-1759852692971-a2abc6799cbd?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8ODl8fE1vZGVzJTIwb2YlMjBTdHVkeSUyMHRvJTIwQ2hvb3NlJTIwRnJvbXxlbnwwfHwwfHx8MA%3D%3D',
+  
     linkUrl: '#'
   },
   {
     id: 4,
     title: 'Financial Modeling',
-    image: 'https://images.unsplash.com/photo-1759310610480-48649b55fbdf?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    image: 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/portfolio-manager/e0e5a5b2-f5e5-4863-8522-268bae8c0a68/8b19962d-e87c-4017-8002-dabcf75cfc6e/DSC_4711.jpg?w=800&cf_fit=scale-down&q=85&format=auto&s=ad50749e1a174e1bd7eb15aeab2fa724fb47016815f27fd496ee21905b06c809',
     linkUrl: '#'
   },
   {
