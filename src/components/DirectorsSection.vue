@@ -1,4 +1,3 @@
-```vue
 <script setup>
 import { ref } from 'vue'
 
@@ -45,7 +44,7 @@ const directors = ref([
       <!-- HEADER -->
       <div class="directors-header">
         <h2>
-          Building a Legacy:
+          Building a Legacy
           <em>Meet our Board of Directors</em>
         </h2>
 
@@ -208,12 +207,17 @@ const directors = ref([
   grid-template-columns:
     repeat(4, minmax(0, 1fr));
 
-  gap: clamp(24px, 2.5vw, 42px);
+  gap: clamp(20px, 2vw, 32px);
 }
 
 
 /* =========================================
    CARD
+   (background, border, shadow, padding —
+   the whole director sits inside a real card.
+   --card-radius / --card-pad are shared with
+   the image so the photo can bleed flush to
+   the card's outer edges.)
 ========================================= */
 
 .director-card {
@@ -223,45 +227,69 @@ const directors = ref([
 
   flex-direction: column;
 
-  transition: transform 0.3s ease;
+  background: #080808;
+
+  border: 1px solid #e2e8f0;
+
+  --card-radius: clamp(16px, 1.6vw, 22px);
+  --card-pad: clamp(14px, 1.4vw, 20px);
+
+  border-radius: var(--card-radius);
+
+  padding: var(--card-pad);
+
+  overflow: hidden;
+
+  box-shadow:
+    0 4px 14px rgba(15, 23, 42, 0.05);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
 }
 
 
 .director-card:hover {
-  transform: translateY(-0.4vh);
+  transform: translateY(-6px);
+
+  border-color: #cbd5e1;
+
+  box-shadow:
+    0 20px 44px rgba(15, 23, 42, 0.12);
 }
 
 
 /* =========================================
    IMAGE AREA
+   Bleeds past the card's own padding on the
+   top/left/right so the photo touches the
+   card's rounded top corners and fills the
+   full width — no gaps.
 ========================================= */
 
 .director-image-wrap {
   position: relative;
 
-  width: 100%;
+  width: calc(100% + (2 * var(--card-pad)));
 
-  height: clamp(230px, 29vw, 310px);
+  height: clamp(190px, 20vw, 250px);
 
-  display: flex;
-
-  align-items: flex-end;
-
-  justify-content: center;
-
-  background: #ffffff;
-
-  border-radius: clamp(10px, 1.2vw, 16px);
+  margin:
+    calc(-1 * var(--card-pad))
+    calc(-1 * var(--card-pad))
+    0;
 
   overflow: hidden;
 
-  box-sizing: border-box;
+  background: #1a1a1a;
 }
 
 
 /* =========================================
    ALL DIRECTOR PHOTOS
-   SAME SIZE
+   SAME SIZE — cover fills the box completely,
+   cropping instead of shrinking to fit.
 ========================================= */
 
 .director-photo {
@@ -271,20 +299,20 @@ const directors = ref([
 
   display: block;
 
-  object-fit: contain;
+  object-fit: cover;
 
-  object-position: center bottom;
+  object-position: center 20%;
 
-  transform: scale(0.90);
+  transform: scale(1);
 
-  transform-origin: center bottom;
+  transform-origin: center center;
 
-  transition: transform 0.35s ease;
+  transition: transform 0.4s ease;
 }
 
 
 .director-card:hover .director-photo {
-  transform: scale(0.94);
+  transform: scale(1.06);
 }
 
 
@@ -293,7 +321,7 @@ const directors = ref([
 ========================================= */
 
 .director-content {
-  padding-top: clamp(10px, 1.3vh, 15px);
+  padding-top: clamp(14px, 1.4vh, 18px);
 }
 
 
@@ -312,7 +340,7 @@ const directors = ref([
 
   line-height: 1.25;
 
-  color: #0f172a;
+  color: #ffffff;
 
   font-family: inherit;
 }
@@ -337,7 +365,7 @@ const directors = ref([
 
   text-transform: uppercase;
 
-  color: #0f172a;
+  color: #dbdbdc;
 }
 
 
@@ -354,7 +382,7 @@ const directors = ref([
 
   line-height: 1.55;
 
-  color: #64748b;
+  color: #cfd3d8;
 }
 
 
@@ -389,20 +417,12 @@ const directors = ref([
       repeat(2, minmax(0, 1fr));
 
     gap:
-      clamp(30px, 5vh, 44px)
-      clamp(16px, 3vw, 28px);
+      clamp(22px, 4vh, 32px)
+      clamp(16px, 3vw, 24px);
   }
 
   .director-image-wrap {
-    height: clamp(250px, 36vw, 330px);
-  }
-
-  .director-photo {
-    transform: scale(0.92);
-  }
-
-  .director-card:hover .director-photo {
-    transform: scale(0.96);
+    height: clamp(200px, 26vw, 260px);
   }
 }
 
@@ -424,7 +444,7 @@ const directors = ref([
   .directors-grid {
     grid-template-columns: 1fr;
 
-    gap: clamp(34px, 6vh, 48px);
+    gap: clamp(20px, 4vh, 28px);
   }
 
   .director-card {
@@ -433,18 +453,12 @@ const directors = ref([
     width: 100%;
 
     margin: 0 auto;
+
+    padding: clamp(14px, 4vw, 18px);
   }
 
   .director-image-wrap {
-    height: clamp(270px, 80vw, 360px);
-  }
-
-  .director-photo {
-    transform: scale(0.92);
-  }
-
-  .director-card:hover .director-photo {
-    transform: scale(0.95);
+    height: clamp(220px, 60vw, 300px);
   }
 
   .director-name {
@@ -461,4 +475,3 @@ const directors = ref([
 }
 
 </style>
-```

@@ -72,7 +72,7 @@ const nextMilestone = () => {
     <div class="champions-grid">
       <!-- LEFT LARGE IMAGE CARD WITH OVERLAY FOOTER -->
       <div class="large-hero-card">
-        <img src="https://elements-resized.envatousercontent.com/envato-dam-assets-production/portfolio-manager/e0e5a5b2-f5e5-4863-8522-268bae8c0a68/97063e96-a4a8-49e2-ab0e-2d552bce0dc2/DSC_4794.jpg?w=800&cf_fit=scale-down&q=85&format=auto&s=57fde5b301ed9ecd264263d03ed5258a07f1e0acc91a9f4d73514f8ca27ef634" alt="Tennis player holding racket" />
+        <img src="https://elements-resized.envatousercontent.com/envato-dam-assets-production/portfolio-manager/e0e5a5b2-f5e5-4863-8522-268bae8c0a68/3e8cc3c3-f04d-4b18-a08f-c2af0966e216/DSC_4976.jpg?w=1600&cf_fit=scale-down&q=85&format=auto&s=fd0647d3002cc309389ba22db7b24c7103567a665590fddff484ac75dbcc07bd" alt="Tennis player holding racket" />
         <div class="card-overlay-footer">
           <div class="overlay-stat">
             <span class="stat-value">25+</span>
@@ -279,7 +279,6 @@ Industry Lecturers</span>
 /* Pattern image */
 .large-hero-card img {
   position: absolute;
-  inset: -3%;
   width: 110%;
   height: 100%;
   max-width: none;
