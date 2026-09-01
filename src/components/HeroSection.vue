@@ -977,16 +977,10 @@ onUnmounted(() => {
   display: flex;
 
   align-items: center;
-
   gap: 8px;
 
   background:
-    rgba(
-      255,
-      255,
-      255,
-      0.1
-    );
+    rgba(0, 0, 0, 0.18);
 
   backdrop-filter:
     blur(12px);
@@ -1080,7 +1074,7 @@ onUnmounted(() => {
     14px;
 
   font-weight:
-    500;
+    600;
 
   padding:
     8px
@@ -1627,7 +1621,7 @@ onUnmounted(() => {
     13px;
 
   font-weight:
-    500;
+    600;
 
   transition:
     background 0.2s ease,
