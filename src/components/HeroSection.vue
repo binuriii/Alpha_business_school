@@ -6,17 +6,9 @@ import {
 } from 'vue'
 
 
-/* =========================================
-   NAVIGATION STATE
-========================================= */
-
 const activeNav = ref('Home')
 const activeTab = ref(0)
 
-
-/* =========================================
-   DROPDOWN STATE
-========================================= */
 
 const openDropdown = ref(null)
 const openFlyout = ref(null)
@@ -914,11 +906,6 @@ onUnmounted(() => {
     background 0.3s ease,
     box-shadow 0.3s ease;
 }
-
-
-/* =========================================
-   SCROLLED HEADER
-========================================= */
 
 .navbar.scrolled {
 
